@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Send Location API</title>
+<script type="text/javascript" src="js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var User = null;
+	var Latitude = null;
+	var Longitude = null;
+	
+	getData = function () {
+		console.log("Inside get data..");
+		User = document.getElementById("user").value;
+		if(User === '') User = null;
+		
+		Latitude = document.getElementById("latitude").value;
+		if(Latitude === '') Latitude = null;
+		
+		Longitude = document.getElementById("longitude").value;
+		if(Longitude === '') Longitude = null;
+		
+	};
+	
+	sendLocation = function() {
+		getData();
+		
+		var req = {
+			user : User,
+			latitude : Latitude,
+			longitude : Longitude
+		}
+		
+		send(req);
+	};
+	
+	send = function (req) {
+		console.log("Inside send");
+		$.ajax({
+			url : '/Mapper/SendLocation',
+			type : 'post',
+			data : {req : JSON.stringify(req)},
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			
+			success : function(response) {
+				alert('Working');
+				document.getElementById("user1").value = response.user;
+				document.getElementById("code").value = response.code;
+				document.getElementById("message").value = response.message;
+			},
+			
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+</script>
+</head>
+<body>
+
+	<h1>Send Location API</h1>
+	<form>
+		User : <input type="text" name="user" id="user"><br/><br/>
+		Latitude : <input type="text" name="latitude" id="latitude"><br/><br/>
+		Longitude : <input type="text" name="longitude" id="longitude"><br/><br/>
+		<input type="button" value="Send Location" onclick="sendLocation()">
+		
+		<h2>OUTPUT</h2>
+		User : <input type="text" name="user1" id="user1"><br/><br/>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+	</form>
+</body>
+</html>
